@@ -76,26 +76,11 @@ class Crypter {
 	 */
 	public static function randomizer()
 	{
-		// There are various sources from which we can get random numbers
-		// but some are more random than others. We'll choose the most
-		// random source we can for this server environment.
-		if (defined('MCRYPT_DEV_URANDOM'))
-		{
-			return MCRYPT_DEV_URANDOM;
-		}
-		elseif (defined('MCRYPT_DEV_RANDOM'))
-		{
-			return MCRYPT_DEV_RANDOM;
-		}
-		// When using the default random number generator, we'll seed
-		// the generator on each call to ensure the results are as
-		// random as we can possibly get them.
-		else
-		{
-			mt_srand();
 
-			return MCRYPT_RAND;
-		}
+        mt_srand();
+
+        return MCRYPT_RAND;
+
 	}
 
 	/**

@@ -15746,7 +15746,9 @@ Highcharts.RangeSelector = function (chart) {
 			// first create a wrapper outside the container in order to make
 			// the inputs work and make export correct
 			if (inputEnabled) {
-				divRelative = div = createElement('div', null, {
+				divRelative = div = createElement('div', {
+				    className: PREFIX + 'wrapper'
+				}, {
 					position: 'relative',
 					height: 0,
 					fontFamily: chartStyle.fontFamily,
@@ -15757,7 +15759,9 @@ Highcharts.RangeSelector = function (chart) {
 				container.parentNode.insertBefore(div, container);
 
 				// create an absolutely positionied div to keep the inputs
-				divAbsolute = div = createElement('div', null, extend({
+				divAbsolute = div = createElement('div', {
+				    className: PREFIX + 'input-container'
+				}, extend({
 					position: 'absolute',
 					top: (chart.plotTop - 25) + 'px',
 					right: (chart.chartWidth - chart.plotLeft - chart.plotWidth) + 'px'

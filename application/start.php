@@ -13,6 +13,8 @@
 */
 
 ini_set('display_errors', 'On');
+ini_set('xdebug.var_display_max_children', '4096');
+ini_set('xdebug.var_display_max_depth', '16');
 
 /*
 |--------------------------------------------------------------------------
