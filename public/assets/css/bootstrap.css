@@ -4189,6 +4189,11 @@ input[type="submit"].btn.btn-mini {
           background-clip: padding-box;
 }
 
+body .modal-medium {
+    width: 420px;
+    margin-left: -210px;
+}
+
 .modal.fade {
   top: -25%;
   -webkit-transition: opacity 0.3s linear, top 0.3s ease-out;

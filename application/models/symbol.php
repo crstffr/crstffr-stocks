@@ -11,7 +11,7 @@ class Symbol {
     function __construct($name)
     {
         $this->name = $name;
-        $this->file = 'storage/symbols/'.$name;
+        $this->file = 'storage/symbols/' . $name . '.data';
     }
 
     public function history()

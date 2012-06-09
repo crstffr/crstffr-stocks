@@ -1,5 +1,10 @@
 <?php
 
+// Aliasing ChromePhp with a shorter, more javascript
+// like name, which will make it easier for me to use.
+
+use ChromePhp as console;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -34,18 +39,55 @@
 
 Route::get('/', function()
 {
-	return View::make('home.index');
+
+    // Check cookie to see if there is a user hash available.
+    // If not, then hash something up nice and short and set
+    // the cookie and redirect to the place with the charts.
+
+    $page_id = Cookie::get('page_id');
+
+    if (empty($page_id)) {
+        $page_id = Page::new_id();
+        Cookie::put('page_id', $page_id);
+    }
+
+    return Redirect::to('c/' . $page_id);
+
+});
+
+Route::post('c/(:any)/add', function($page_id)
+{
+    $page = new Page($page_id);
+    $input = Input::get();
+    $page->add_symbol($input);
+    $page->save();
+
+    return Redirect::to('c/' . $page_id);
+
+});
+
+Route::post('c/(:any)/buy', function($page_id)
+{
+    $page = new Page($page_id);
+    $input = Input::get();
+    $page->buy_symbol($input);
+    $page->save();
+
+    return Redirect::to('c/' . $page_id);
+
+});
+
+Route::get('c/(:any)', function($id)
+{
+    $page = new Page($id);
+    return View::make('charts.index')->with('symbols', $page->symbols);
 });
 
 Route::get('data/(:any)', function($symbol)
 {
-
     $symbol = new Symbol($symbol);
-
     $history = $symbol->history();
-
     echo $history;
-
 
 });
 
