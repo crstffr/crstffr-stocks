@@ -37,5 +37,7 @@ return array(
 
 	'docs' => array('handles' => 'docs'),
 	'chromephp' => array('auto' => true),
+	'requests' => array('auto' => true),
+	'simplehtmldom' => array('auto' => true),
 
 );

@@ -966,6 +966,10 @@ input[type="checkbox"]:focus {
   width: 270px;
 }
 
+.input-xlarge-pended {
+  width: 315px;
+}
+
 .input-xxlarge {
   width: 530px;
 }
@@ -1768,6 +1772,16 @@ table .span24 {
   float: none;
   width: 1884px;
   margin-left: 0;
+}
+
+.ajax-loading {
+    background-image: url("../img/ajax-loading.gif");
+    background-position: 5px 5px;
+    background-repeat: no-repeat;
+}
+
+input.ajax-loading {
+    padding-left: 25px;
 }
 
 [class^="icon-"],

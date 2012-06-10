@@ -1,5 +1,7 @@
 <?php
 
+use ChromePhp as console;
+
 class Symbol {
 
     public $name;
@@ -12,6 +14,116 @@ class Symbol {
     {
         $this->name = $name;
         $this->file = 'storage/symbols/' . $name . '.data';
+    }
+
+
+    public static function lookup_symbol_by_query($query) {
+
+        $callback = 'YAHOO.Finance.SymbolSuggest.ssCallback';
+        $url =  'http://d.yimg.com/autoc.finance.yahoo.com/autoc';
+        $url .= '?query=' . $query;
+        $url .= '&callback=' . $callback;
+
+        $response = Requests::get($url);
+        $body = $response->body;
+
+        // incoming data is wrapped in JSONP callback
+        // so strip that off and decode like normal.
+
+        $body = substr($body, strlen($callback) + 1, -1);
+        $data = json_decode($body, true);
+        $out  = array();
+
+        if ($data === false ||
+            !isset($data['ResultSet']) ||
+            !isset($data['ResultSet']['Result']) ||
+            empty($data['ResultSet']['Result'])) {
+
+            return '';
+        }
+
+        // We have results, lets loop through them
+        // and format them properly for output.
+
+        foreach ($data['ResultSet']['Result'] as $symbol) {
+
+            $out[] = array('full'    => $symbol['symbol'] . " : " . $symbol['name'],
+                           'symbol'  => $symbol['symbol'],
+                           'company' => $symbol['name']);
+
+        }
+
+        return $out;
+
+    }
+
+    public static function lookup_companyinfo_by_query($query)
+    {
+
+        $out = array('wiki' => '', 'description' => '', 'website' => '');
+
+        // Fetch the Wikipedia article for this company by querying
+        // the wikipedia open search (their autocomplete).
+
+        $url  = "http://en.wikipedia.org/w/api.php?action=opensearch";
+        $url .= "&search=" . $query;
+
+        $response = Requests::get($url);
+        $body = json_decode($response->body);
+
+        if (empty($body) || empty($body[0])) {
+            return $out;
+        }
+
+        // If the search returned nothing, then pop the last
+        // word off the search and try again until we either
+        // get SOMETHING or NOTHING.
+
+        if (!isset($body[1][0])) {
+
+            // strip the last word off the search again
+            $arr = explode(' ', $query); array_pop($arr);
+            return self::lookup_companyinfo_by_query(implode(' ', $arr));
+
+        }
+
+        $first_result = $body[1][0];
+        $clean_result = preg_replace('/\s/', '_', $first_result);
+        $out['wiki'] = "en.wikipedia.org/wiki/" . $clean_result;
+
+        // Fetch that Wiki page and pull some description and other
+        // information from it using Simple HTML Dom.
+
+        $wiki_response = Requests::get('http://' . $out['wiki']);
+
+        $dom = new simple_html_dom();
+        $dom->load($wiki_response->body);
+
+        // Scrape the DOM for the first content paragraph.
+
+        $info = $dom->find('div#mw-content-text', 0)->find('p',0);
+        if (count($info) === 1) {
+            $desc = $info->plaintext;
+            $desc = preg_replace("/\[\d+\]/", "", $desc);
+            $desc = preg_replace("/\([^)]*\) /", "", $desc);
+            $out['description'] = $desc;
+        }
+
+        // Scrape the DOM for the Website in the infobox.
+
+        $rows = $dom->find('table.infobox', 0)->find('tr');
+        foreach($rows as $row) {
+            $th = $row->find('th', 0);
+            if (count($th) === 1) {
+                if (strtolower(trim($th->plaintext)) === "website") {
+                    $out['website'] = parse_url(strtolower($row->find('a', 0)->href), PHP_URL_HOST);
+                    break;
+                }
+            }
+        }
+
+        return $out;
+
     }
 
     public function history()

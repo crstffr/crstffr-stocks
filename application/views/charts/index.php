@@ -118,129 +118,10 @@
 </div>
 <!--/.fluid-container-->
 
-<!--
-***********************************************************
-Modal Form - Add Symbol
-*********************************************************** -->
+<?php echo render('modals.add_symbol'); ?>
+<?php echo render('modals.buy_symbol'); ?>
 
-<div class="modal hide" id="addSymbol">
-    <form class="modal-form form-horizontal" action="<?php echo URL::current(); ?>/add" method="POST">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>Add a Symbol to Watch</h3>
-        </div>
-        <div class="modal-body">
 
-            <fieldset>
-                <div class="control-group">
-                    <label class="control-label" for="input01">Symbol</label>
-
-                    <div class="controls">
-                        <input name="symbol" type="text" class="input-small" id="input01">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="input02">Company Name</label>
-
-                    <div class="controls">
-                        <input name="company" type="text" id="input02">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">Description</label>
-                    <div class="controls">
-                        <textarea name="description" class="input-xlarge" rows="4"></textarea>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="input04">Website</label>
-
-                    <div class="controls">
-                        <div class="input-prepend">
-                            <span class="add-on">http://</span><input name="sites[company]" class="input-xlarge" type="text" id="input03">
-                        </div>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="input04">Wiki Page</label>
-
-                    <div class="controls">
-                        <div class="input-prepend">
-                            <span class="add-on">http://</span><input name="sites[wiki]" class="input-xlarge" type="text" id="input04">
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-            <input type="submit" class="btn btn-primary" value="Submit">
-        </div>
-    </form>
-</div>
-
-<!--
-***********************************************************
-Modal Form - Buy Shares
-*********************************************************** -->
-
-<div class="modal modal-medium hide" id="buyShares">
-    <form class="modal-form form-horizontal" action="<?php echo URL::current(); ?>/buy" method="POST">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>Track a Purchase of Shares</h3>
-        </div>
-        <div class="modal-body">
-            <fieldset>
-                <div class="control-group">
-                    <label class="control-label">Symbol</label>
-                    <div class="controls">
-                        <input name="symbol" type="text" class="span1">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">Quantity</label>
-                    <div class="controls">
-                        <input name="quantity" type="text" class="span1">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">Date of Purchase</label>
-                    <div class="controls">
-                        <input name="date" type="text" class="span2">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">Price Paid</label>
-                    <div class="controls">
-                        <div class="input-prepend">
-                            <span class="add-on">$</span><input name="price" type="text" class="span1">
-                        </div>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">Fees</label>
-                    <div class="controls">
-                        <div class="input-prepend">
-                            <span class="add-on">$</span><input name="fees" type="text" class="span1">
-                        </div>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">Notes</label>
-                    <div class="controls">
-                        <textarea name="notes" rows="3"></textarea>
-                    </div>
-                </div>
-
-            </fieldset>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-            <input type="submit" class="btn btn-primary" value="Submit">
-        </div>
-    </form>
-</div>
 
 <!--
 ***********************************************************
@@ -261,7 +142,7 @@ Javascripts - Look at all of them.
 <script src="./assets/js/bootstrap/bootstrap-button.js"></script>
 <script src="./assets/js/bootstrap/bootstrap-collapse.js"></script>
 <script src="./assets/js/bootstrap/bootstrap-carousel.js"></script>
-<script src="./assets/js/bootstrap/bootstrap-typeahead.js"></script>
+<script src="./assets/js/bootstrap/bootstrap-typeahead-ajax.js"></script>
 <script src="./assets/js/highstock/highstock.src.js"></script>
 <script src="./assets/js/highstock/modules/exporting.js"></script>
 
@@ -299,6 +180,79 @@ Javascript Program Kickoff
 <script>
     $(function() {
 
+        function setupAutoComplete() {
+
+            var form = $("#addSymbol");
+            var search = $(".autocomplete-symbol-search");
+            var symbol = form.find("input[name='symbol']");
+            var company = form.find("input[name='company']");
+            var group = $(symbol).add(company);
+
+            // Autocomplete search for symbol and company names
+
+            search.typeahead({
+                source:function (typeahead, query) {
+
+                    query = $.trim(query);
+                    if (query.length === 0) { return ''; }
+
+                    $.ajax({
+                        dataType : 'json',
+                        url:"./ajax/autocomplete/symbol",
+                        beforeSend: function(){
+                            search.addClass('ajax-loading');
+                        },
+                        complete: function(){
+                            search.removeClass('ajax-loading');
+                        },
+                        data: {query: query},
+                        success:function (data) {
+                            typeahead.process(data);
+                        }
+                    });
+
+                },
+                onselect: function(object) {
+                    symbol.val(object.symbol);
+                    company.val(object.company);
+                    lookupCompanyInfo(object.company);
+                },
+                property: "full"
+            });
+
+        }
+
+        function lookupCompanyInfo(company) {
+
+            var form = $("#addSymbol");
+            var site = form.find("input[name='sites[company]']");
+            var wiki = form.find("input[name='sites[wiki]']");
+            var desc = form.find("textarea[name='description']");
+            var group = $(wiki).add(site).add(desc);
+
+            $.ajax({
+                dataType : 'json',
+                url:"./ajax/lookup/companyinfo",
+                data: {query: company},
+                beforeSend:function() {
+                    group.val('').addClass('ajax-loading');
+                },
+                complete:function(){
+                    group.removeClass('ajax-loading');
+                },
+                success:function (data) {
+                    wiki.val(data.wiki);
+                    site.val(data.website);
+                    desc.val(data.description);
+                }
+            });
+
+        }
+
+
+
+        setupAutoComplete();
+
         $("a[href='#']").live('click', function(e){
             e.preventDefault();
         });
@@ -324,7 +278,7 @@ Javascript Program Kickoff
             var tmplhtml = tmplobj(symdata);
             $(tmplhtml).appendTo("#charts");
 
-            $.getJSON('./data/' + sym, function(data) {
+            $.getJSON('./symbol/' + sym + '/history/', function(data) {
 
                 var id = 'chart_' + sym;
                 var options = {

@@ -37,6 +37,8 @@ use ChromePhp as console;
 |
 */
 
+
+
 Route::get('/', function()
 {
 
@@ -48,7 +50,7 @@ Route::get('/', function()
 
     if (empty($page_id)) {
         $page_id = Page::new_id();
-        Cookie::put('page_id', $page_id);
+        Cookie::forever('page_id', $page_id);
     }
 
     return Redirect::to('c/' . $page_id);
@@ -83,15 +85,29 @@ Route::get('c/(:any)', function($id)
     return View::make('charts.index')->with('symbols', $page->symbols);
 });
 
-Route::get('data/(:any)', function($symbol)
+Route::get('symbol/(:any)/history', function($symbol)
 {
     $symbol = new Symbol($symbol);
     $history = $symbol->history();
     echo $history;
+});
+
+Route::get('ajax/autocomplete/symbol', function()
+{
+
+    $query = Input::get('query');
+    $result = Symbol::lookup_symbol_by_query($query);
+    echo json_encode($result);
 
 });
 
+Route::get('ajax/lookup/companyinfo', function()
+{
+    $query = Input::get('query');
+    $result = Symbol::lookup_companyinfo_by_query($query);
+    echo json_encode($result);
 
+});
 
 /*
 |--------------------------------------------------------------------------
