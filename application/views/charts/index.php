@@ -13,6 +13,7 @@
     <link href="./assets/css/bootstrap-custom.css" rel="stylesheet">
     <link href="./assets/css/application.css" rel="stylesheet">
     <link href="./assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="./assets/css/print.css" rel="stylesheet" media="print">
 
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -108,14 +109,14 @@ Javascript Chart Template
 <script id="tmpl-chart" type="text/x-handlebars-template">
     <div class="chart-container">
         <h2>
-            <a class="btn btn-icon btn-info" data-toggle="collapse" data-target="#{{symbol}}-desc" href="#"><i class="icon-white icon-info-sign"></i></a> <a class="btn btn-icon btn-success buy-shares" data-symbol="{{symbol}}" data-toggle="modal" href="#buyShares">$$</a> {{symbol}}: {{company}}
+            <a class="btn btn-icon btn-info no-print" data-toggle="collapse" data-target="#{{symbol}}-desc" href="#"><i class="icon-white icon-info-sign"></i></a> <a class="btn btn-icon btn-success buy-shares no-print" data-symbol="{{symbol}}" data-toggle="modal" href="#buyShares">$$</a> {{symbol}}: {{company}}
         </h2>
 
         <div id="{{symbol}}-desc" class="collapse chart-description">
 
             <p>{{description}}</p>
 
-            <div class="btn-toolbar">
+            <div class="btn-toolbar no-print">
                 <div class="btn-group pull-left">
                     {{#if sites.company}}
                             <a class="btn btn-mini" href='http://{{sites.company}}' target="_blank">Company Website</a>
@@ -127,6 +128,7 @@ Javascript Chart Template
                             <a class="btn btn-mini" href='http://{{sites.wiki}}' target="_blank">Wikipedia</a>
                     {{/if}}
                 </div>
+
                 <!--
                 <div class="btn-group">
                     <a class="btn btn-mini" href='#'>Edit</a>
