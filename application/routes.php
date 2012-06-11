@@ -46,12 +46,23 @@ Route::get('/', function()
     return Redirect::to('c/' . $page);
 });
 
+Route::post('settings', function()
+{
+    Cookie::forever('zoom', Input::get('zoom'));
+    return Redirect::to('/');
+});
+
 
 Route::get('c/(:any)', function($id)
 {
     $page = new Page($id);
+    $zoom = Cookie::get('zoom');
     Cookie::forever('recent', $id);
-    return View::make('charts.index')->with('symbols', $page->symbols);
+
+    return View::make('charts.index')
+                ->with('symbols', $page->symbols)
+                ->with('zoom', $zoom);
+
 });
 
 Route::get('c', function() {

@@ -26,31 +26,14 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+
+    <!-- We let jQuery in at the top -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 </head>
 
 <body>
 
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container-fluid">
-
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </a>
-
-            <a class="brand" href="./c/chris">My Stock Charts</a>
-
-            <a class="btn pull-right" data-toggle="modal" href="#addSymbol">
-                <i class="icon-plus"></i> Add New Symbol
-            </a>
-
-            <?php echo render('charts.navigation'); ?>
-
-        </div>
-    </div>
-</div>
+<?php echo render('charts.navigation'); ?>
 
 <div class="container-fluid">
     <div class="row-fluid">
@@ -93,13 +76,13 @@
 <?php echo render('modals.add_symbol'); ?>
 <?php echo render('modals.buy_symbol'); ?>
 <?php echo render('modals.delete_symbol'); ?>
+<?php echo render('modals.settings', array('zoom' => $zoom)); ?>
 
 <!--
 ***********************************************************
 Javascripts - Look at all of them.
 *********************************************************** -->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="./assets/js/handlebars-1.0.0.beta.6.js"></script>
 <script src="./assets/js/moment.1.6.2.js"></script>
 <script src="./assets/js/bootstrap/bootstrap-transition.js"></script>
@@ -162,7 +145,7 @@ Javascript Chart Template
 
         <div class="btn-group js-zoom-group zoom-group hide" id="zoom_{{symbol}}" data-toggle="buttons-radio">
             <a class="btn btn-mini btn-zoom" data-unit="w" data-qty="2" href='#'>2w</a>
-            <a class="btn btn-mini btn-zoom active" data-unit="M" data-qty="1" href='#'>1m</a>
+            <a class="btn btn-mini btn-zoom" data-unit="M" data-qty="1" href='#'>1m</a>
             <a class="btn btn-mini btn-zoom" data-unit="M" data-qty="3" href='#'>3m</a>
             <a class="btn btn-mini btn-zoom" data-unit="M" data-qty="6" href='#'>6m</a>
             <a class="btn btn-mini btn-zoom" data-unit="y" data-qty="1" href='#'>1y</a>
@@ -183,8 +166,6 @@ Javascript Program Kickoff
 *********************************************************** -->
 
 <script>
-
-    var charts = [];
 
     $(function() {
 
@@ -257,8 +238,6 @@ Javascript Program Kickoff
 
         }
 
-
-
         setupAutoComplete();
 
         $("a[rel='external']").live('click', function(e){
@@ -283,7 +262,10 @@ Javascript Program Kickoff
 
         var TRADE_TYPE_BUY  = 'buy';
         var TRADE_TYPE_SELL = 'sell';
-        var symbols = <?php echo json_encode($symbols); ?>;
+
+        var symbols     = <?php echo json_encode($symbols); ?>;
+        var zoom        = '<?php echo $zoom; ?>';
+        var charts      = [];
 
         for (i in symbols) {
             buildAndLoadChart(symbols[i]);
@@ -303,7 +285,9 @@ Javascript Program Kickoff
 
             });
 
-            btns.filter(".active").click();
+            if (zoom.length > 0) {
+                btns.filter(":contains(" + zoom + ")").click();
+            }
 
         }
 
