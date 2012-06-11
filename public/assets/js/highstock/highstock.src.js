@@ -15560,6 +15560,10 @@ Highcharts.RangeSelector = function (chart) {
 			selected = i;
 
 		} else { // existing axis object; after render time
+
+
+		    console.log(newMin, newMax);
+
 			setTimeout(function () { // make sure the visual state is set before the heavy process begins
 				baseAxis.setExtremes(
 					newMin,
@@ -15709,39 +15713,45 @@ Highcharts.RangeSelector = function (chart) {
 
 		// create the elements
 		if (!rendered) {
-			zoomText = renderer.text(lang.rangeSelectorZoom, plotLeft, chart.plotTop - 10)
-				.css(options.labelStyle)
-				.add();
 
-			// button starting position
-			buttonLeft = plotLeft + zoomText.getBBox().width + 5;
+		    if (chart.options.zoomSelector.enabled == true) {
 
-			each(buttonOptions, function (rangeOptions, i) {
-				buttons[i] = renderer.button(
-					rangeOptions.text,
-					buttonLeft,
-					chart.plotTop - 25,
-					function () {
-						clickButton(i, rangeOptions);
-						this.isActive = true;
-					},
-					buttonTheme,
-					states && states.hover,
-					states && states.select
-				)
-				.css({
-					textAlign: 'center'
-				})
-				.add();
+                zoomText = renderer.text(lang.rangeSelectorZoom, plotLeft, chart.plotTop - 10)
+                    .css(options.labelStyle)
+                    .add();
 
-				// increase button position for the next button
-				buttonLeft += buttons[i].width + (options.buttonSpacing || 0);
+                // button starting position
+                buttonLeft = plotLeft + zoomText.getBBox().width + 5;
 
-				if (selected === i) {
-					buttons[i].setState(2);
-				}
+                each(buttonOptions, function (rangeOptions, i) {
 
-			});
+                    buttons[i] = renderer.button(
+                        rangeOptions.text,
+                        buttonLeft,
+                        chart.plotTop - 25,
+                        function () {
+                            clickButton(i, rangeOptions);
+                            this.isActive = true;
+                        },
+                        buttonTheme,
+                        states && states.hover,
+                        states && states.select
+                    )
+                    .css({
+                        textAlign: 'center'
+                    })
+                    .add();
+
+                    // increase button position for the next button
+                    buttonLeft += buttons[i].width + (options.buttonSpacing || 0);
+
+                    if (selected === i) {
+                        buttons[i].setState(2);
+                    }
+
+                });
+
+            }
 
 			// first create a wrapper outside the container in order to make
 			// the inputs work and make export correct

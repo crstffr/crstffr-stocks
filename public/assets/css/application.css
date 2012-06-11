@@ -1,0 +1,38 @@
+body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+hr {
+    float: left;
+    width: 100%;
+}
+
+.sidebar-nav {
+    padding: 9px 0;
+}
+
+.chart-container {
+    min-height: 450px;
+}
+
+.zoom-group {
+    position: absolute;
+    margin-top: 10px;
+    z-index: 1;
+}
+
+.chart {
+    height: 350px;
+    margin-top: 35px;
+    width: 100%;
+    float: left;
+}
+
+.highcharts-input-container {
+    display: none;
+}
+
+.highcharts-container {
+    margin-top: -25px;
+}

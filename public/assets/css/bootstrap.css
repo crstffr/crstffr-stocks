@@ -966,10 +966,6 @@ input[type="checkbox"]:focus {
   width: 270px;
 }
 
-.input-xlarge-pended {
-  width: 315px;
-}
-
 .input-xxlarge {
   width: 530px;
 }
@@ -4201,11 +4197,6 @@ input[type="submit"].btn.btn-mini {
   -webkit-background-clip: padding-box;
      -moz-background-clip: padding-box;
           background-clip: padding-box;
-}
-
-body .modal-medium {
-    width: 420px;
-    margin-left: -210px;
 }
 
 .modal.fade {

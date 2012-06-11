@@ -1,0 +1,17 @@
+
+.input-xlarge-pended {
+  width: 315px;
+}
+
+.btn-icon {
+  padding: 3px 4px;
+  font-size: 11px;
+  line-height: 14px;
+  vertical-align: middle;
+  margin-bottom: 5px;
+}
+
+body .modal-medium {
+    width: 420px;
+    margin-left: -210px;
+}

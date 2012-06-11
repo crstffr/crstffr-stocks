@@ -64,6 +64,17 @@ class Page {
         $this->symbols[$index] = $symbol;
     }
 
+    function delete_symbol($symbol) {
+
+        foreach($this->symbols as $index => $data) {
+            if ($data['symbol'] == $symbol) {
+                unset($this->symbols[$index]);
+                break;
+            }
+        }
+
+    }
+
     function save() {
         File::put($this->file, serialize($this->symbols));
     }

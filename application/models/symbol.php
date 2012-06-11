@@ -101,17 +101,25 @@ class Symbol {
 
         // Scrape the DOM for the first content paragraph.
 
-        $info = $dom->find('div#mw-content-text', 0)->find('p',0);
-        if (count($info) === 1) {
-            $desc = $info->plaintext;
-            $desc = preg_replace("/\[\d+\]/", "", $desc);
-            $desc = preg_replace("/\([^)]*\) /", "", $desc);
-            $out['description'] = $desc;
-        }
+        $content = $dom->find('div#mw-content-text', 0);
+        if (count($content) === 0) { return $out; }
+
+        $info = $content->find('p',0);
+        if (count($info) === 0) { return $out; }
+
+        $desc = $info->plaintext;
+        $desc = preg_replace("/\[\d+\]/", "", $desc);
+        $desc = preg_replace("/\([^)]*\) /", "", $desc);
+        $out['description'] = $desc;
 
         // Scrape the DOM for the Website in the infobox.
 
-        $rows = $dom->find('table.infobox', 0)->find('tr');
+        $table = $dom->find('table.infobox', 0);
+        if (count($table) === 0) { return $out; }
+
+        $rows = $table->find('tr');
+        if (count($rows) === 0) { return $out; }
+
         foreach($rows as $row) {
             $th = $row->find('th', 0);
             if (count($th) === 1) {

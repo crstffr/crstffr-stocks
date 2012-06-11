@@ -41,20 +41,21 @@ use ChromePhp as console;
 
 Route::get('/', function()
 {
+    $page = Cookie::get('recent');
+    $page = ($page) ? $page : "tech";
+    return Redirect::to('c/' . $page);
+});
 
-    // Check cookie to see if there is a user hash available.
-    // If not, then hash something up nice and short and set
-    // the cookie and redirect to the place with the charts.
 
-    $page_id = Cookie::get('page_id');
+Route::get('c/(:any)', function($id)
+{
+    $page = new Page($id);
+    Cookie::forever('recent', $id);
+    return View::make('charts.index')->with('symbols', $page->symbols);
+});
 
-    if (empty($page_id)) {
-        $page_id = Page::new_id();
-        Cookie::forever('page_id', $page_id);
-    }
-
-    return Redirect::to('c/' . $page_id);
-
+Route::get('c', function() {
+    return Redirect::to('/');
 });
 
 Route::post('c/(:any)/add', function($page_id)
@@ -79,34 +80,38 @@ Route::post('c/(:any)/buy', function($page_id)
 
 });
 
-Route::get('c/(:any)', function($id)
+Route::post('c/(:any)/delete', function($page_id)
 {
-    $page = new Page($id);
-    return View::make('charts.index')->with('symbols', $page->symbols);
+    $page = new Page($page_id);
+    $symbol = Input::get('symbol');
+    $page->delete_symbol($symbol);
+    $page->save();
+
+    return Redirect::to('c/' . $page_id);
+
 });
 
-Route::get('symbol/(:any)/history', function($symbol)
+
+Route::get('symbol/history', function()
 {
-    $symbol = new Symbol($symbol);
+    $query = Input::get('query');
+    $symbol = new Symbol($query);
     $history = $symbol->history();
     echo $history;
 });
 
-Route::get('ajax/autocomplete/symbol', function()
+Route::get('symbol/name', function()
 {
-
     $query = Input::get('query');
     $result = Symbol::lookup_symbol_by_query($query);
-    echo json_encode($result);
-
+    return Response::json($result);
 });
 
-Route::get('ajax/lookup/companyinfo', function()
+Route::get('symbol/companyinfo', function()
 {
     $query = Input::get('query');
     $result = Symbol::lookup_companyinfo_by_query($query);
-    echo json_encode($result);
-
+    return Response::json($result);
 });
 
 /*

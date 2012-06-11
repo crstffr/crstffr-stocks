@@ -13,15 +13,15 @@ Modal Form - Buy Shares (./views/modals/buy_symbol.php)
         <div class="modal-body">
             <fieldset>
                 <div class="control-group">
-                    <label class="control-label">Symbol</label>
-                    <div class="controls">
-                        <input name="symbol" type="text" class="span1">
-                    </div>
-                </div>
-                <div class="control-group">
                     <label class="control-label">Quantity</label>
                     <div class="controls">
                         <input name="quantity" type="text" class="span1">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Symbol</label>
+                    <div class="controls">
+                        <input name="symbol" type="text" class="input-small">
                     </div>
                 </div>
                 <div class="control-group">
@@ -57,7 +57,9 @@ Modal Form - Buy Shares (./views/modals/buy_symbol.php)
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-            <input type="submit" class="btn btn-primary" value="Submit">
+            <input type="submit" class="btn btn-success" value="Submit">
         </div>
     </form>
 </div>
+
+<!-- end modal form -->
