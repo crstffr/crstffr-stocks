@@ -46,7 +46,6 @@ Modal Form - Settings
             var val = $(this).text();
             form.find("input[name='zoom']").val(val);
         });
-        console.log(zoom);
         if (zoom.length > 0) {
             form.find("a.btn:contains(" + zoom + ")").click().addClass('active');
         }
