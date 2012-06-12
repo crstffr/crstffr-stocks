@@ -21,4 +21,3 @@ Modal Form - Delete Symbol (./views/modals/delete_symbol.php)
     </form>
 </div>
 
-<!-- end modal form -->

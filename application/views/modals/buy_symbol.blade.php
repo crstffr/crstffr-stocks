@@ -31,7 +31,7 @@ Modal Form - Buy Shares (./views/modals/buy_symbol.php)
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Price Paid</label>
+                    <label class="control-label">Price Paid per Share</label>
                     <div class="controls">
                         <div class="input-prepend">
                             <span class="add-on">$</span><input name="price" type="text" class="span1">
@@ -62,4 +62,3 @@ Modal Form - Buy Shares (./views/modals/buy_symbol.php)
     </form>
 </div>
 
-<!-- end modal form -->

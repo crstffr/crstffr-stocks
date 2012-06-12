@@ -111,6 +111,14 @@ Route::get('symbol/history', function()
     echo $history;
 });
 
+Route::get('symbol/last', function()
+{
+    $query = Input::get('query');
+    $symbol = new Symbol($query);
+    $last = $symbol->last_price();
+    return Response::json($last);
+});
+
 Route::get('symbol/name', function()
 {
     $query = Input::get('query');

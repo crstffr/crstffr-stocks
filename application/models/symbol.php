@@ -134,6 +134,20 @@ class Symbol {
 
     }
 
+    public function last_price()
+    {
+        $history = $this->history();
+        $data = json_decode($history);
+        $last = array_pop($data);
+
+        $out = array('date'  => $last[0],
+                     'price' => $last[1]);
+
+        return $out;
+
+    }
+
+
     public function history()
     {
 

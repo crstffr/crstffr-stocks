@@ -29,6 +29,34 @@ hr {
     float: left;
 }
 
+.trades-well {
+    margin-top: 10px;
+}
+
+.trades-well table td {
+    text-align: center;
+}
+
+.trades-well table td:first-child {
+    text-align: left;
+}
+
+.trades-well table td:last-child {
+    text-align: right;
+}
+
+.trades-well table td.profit {
+    color: green;
+}
+
+.trades-well table td.loss {
+    color: red;
+}
+
+.trades-well table td.total {
+    font-weight: bold;
+}
+
 .highcharts-input-container {
     display: none;
 }

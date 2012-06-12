@@ -52,4 +52,3 @@ Modal Form - Settings
     });
 </script>
 
-<!-- end modal form -->

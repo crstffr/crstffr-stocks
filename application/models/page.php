@@ -29,6 +29,18 @@ class Page {
         $this->file = 'storage/pages/' . $id . '.data';
         $data = unserialize(File::get($this->file));
         $this->symbols = ($data) ? $data : array();
+
+        // Attach the last price if there's any trades
+        // so that we don't have to wait for an ajax
+        // call to display the last known price.
+
+        foreach($this->symbols as $index => $symbol) {
+            if (isset($symbol['trades']) && count($symbol['trades']) > 0) {
+                $symbolObj = new Symbol($symbol['symbol']);
+                $symbol['last_price'] = $symbolObj->last_price();
+                $this->symbols[$index] = $symbol;
+            }
+        }
     }
 
     function __toString() {

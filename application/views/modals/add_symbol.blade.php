@@ -64,4 +64,3 @@ Modal Form - Add Symbol (./views/modals/add_symbol.php)
     </form>
 </div>
 
-<!-- end modal form -->

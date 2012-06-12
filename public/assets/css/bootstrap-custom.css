@@ -15,3 +15,11 @@ body .modal-medium {
     width: 420px;
     margin-left: -210px;
 }
+
+table.table-no-border td {
+    border: 0px;
+}
+
+table .table-top-border td {
+    border-top: 1px solid #ddd;
+}
