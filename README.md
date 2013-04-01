@@ -13,5 +13,3 @@ This is a work in progress, using the following technologies:
  + [Moment.js](http://momentjs.com/)
 
 Please don't steal this and make a million dollars.
-
-Doesn't really matter, Google Finance is officially shutting down on Oct 20, 2012 and then this won't work anymore.
